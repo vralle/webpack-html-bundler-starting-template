@@ -7,7 +7,6 @@ export default [
   pluginJs.configs.recommended,
   {
     ignores: ['dist/**'],
-    cacheLocation: './.cache/eslint',
   },
   {
     files: ["**/*.{js,mjs,ts}"],

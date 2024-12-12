@@ -14,7 +14,7 @@
   "remoteUser": "node", // Default "node"
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
-  "postAttachCommand": "sudo npm update -g ; cd ./projects/example ; npm install",
+  "postCreateCommand": "sudo npm update -g ; cd /workspace/projects/bootstrap && npm install",
   "customizations": {
     "vscode": {
       "extensions": [
