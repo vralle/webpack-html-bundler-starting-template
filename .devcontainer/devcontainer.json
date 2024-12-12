@@ -1,0 +1,31 @@
+{
+  "name": "ms ts debian latest",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "runArgs": [
+    "--name", // Container name
+    "ms-ts" // [a-zA-Z0-9][a-zA-Z0-9_.-]
+  ],
+  "remoteEnv": {
+    "TZ": "${localEnv:TZ:Europe/Berlin}"
+  },
+  "remoteUser": "node", // Default "node"
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "postAttachCommand": "sudo npm update -g ; cd ./projects/example ; npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "CelianRiboulet.webvalidator",
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "jock.svg",
+        "ms-azuretools.vscode-docker",
+        "streetsidesoftware.code-spell-checker",
+        "stylelint.vscode-stylelint"
+      ]
+    }
+  }
+}

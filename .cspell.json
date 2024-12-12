@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "maxNumberOfProblems": 500,
+  "dictionaries": [
+    "custom-words"
+  ],
+  "dictionaryDefinitions": [
+    {
+      "name": "custom-words",
+      "description": "Additional dictionary",
+      "path": "./.cspell/custom-words.txt"
+    }
+  ],
+  "useGitignore": true,
+  "ignorePaths": [
+    "**/public/**",
+    "**/build/**",
+  ],
+}

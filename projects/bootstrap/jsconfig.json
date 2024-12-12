@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    // Type Checking
+    "alwaysStrict": true,
+    "strict": true,
+    "outDir": "./dist/",
+    // Modules
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    // Language and Environment
+    "target": "ES2020",
+    // JavaScript Support
+    "allowJs": true,
+    "checkJs": true,
+  }
+}
