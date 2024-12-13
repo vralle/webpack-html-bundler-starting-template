@@ -13,7 +13,6 @@
   ],
   "useGitignore": true,
   "ignorePaths": [
-    "**/public/**",
-    "**/build/**",
+    "**/dist/**",
   ],
 }

@@ -1,20 +1,8 @@
 /**
- * @typedef {import('sharp').AvifOptions} AvifOptions
- * @typedef {import('sharp').GifOptions} GifOptions
- * @typedef {import('sharp').HeifOptions} HeifOptions
- * @typedef {import('sharp').Jp2Options} Jp2Options
- * @typedef {import('sharp').JpegOptions} JpegOptions
- * @typedef {import('sharp').JxlOptions} JxlOptions
- * @typedef {import('sharp').PngOptions} PngOptions
- * @typedef {import('sharp').RawOptions} RawOptions
- * @typedef {import('sharp').TiffOptions} TiffOptions
- * @typedef {import('sharp').WebpOptions} WebpOptions
- */
-/**
  * @typedef {object} SharpEncodeOptions
- * @property {AvifOptions} [avif]
- * @property {GifOptions} [gif]
- * @property {HeifOptions} [heif]
+ * @property {import('sharp').AvifOptions} [avif]
+ * @property {import('sharp').GifOptions} [gif]
+ * @property {import('sharp').HeifOptions} [heif]
  * @property {import('sharp').Jp2Options} [jp2]
  * @property {import('sharp').JpegOptions} [jpeg]
  * @property {import('sharp').JxlOptions} [jxl]

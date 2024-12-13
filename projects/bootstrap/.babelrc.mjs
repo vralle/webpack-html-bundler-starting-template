@@ -1,11 +1,11 @@
-/** @type {import('babel__preset-env').Options} */
+/** @type {import('@babel/preset-env').Options} */
 const presetOptions = {
   loose: true,
   bugfixes: true,
   modules: false,
 };
 
-/** @type {import('babel__core').TransformOptions} */
+/** @type {import('@babel/core').TransformOptions} */
 const babelConfig = {
   presets: [
     [

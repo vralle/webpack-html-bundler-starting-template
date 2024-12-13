@@ -3,12 +3,12 @@ export default {
   extends: 'stylelint-config-twbs-bootstrap',
   cache: true,
   ignoreFiles: [
-    "build/**"
+    "dist/**"
   ],
   overrides: [
     {
       files: [
-        "**/*.html"
+        "*.html"
       ],
       extends: [
         "stylelint-config-html"
