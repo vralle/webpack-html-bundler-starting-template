@@ -5,8 +5,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "webpack build --config webpack.config.mjs --define-process-env-node-env production",
-    "start": "webpack serve --config webpack.config.mjs --define-process-env-node-env development"
+    "build": "npm-run-all --sequential webpack-build validate-html",
+    "webpack-build": "webpack build --config webpack.config.mjs --define-process-env-node-env production",
+    "start": "webpack serve --config webpack.config.mjs --define-process-env-node-env development",
+    "validate-html": "node helpers/vnu-jar.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
