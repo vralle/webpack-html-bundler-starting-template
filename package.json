@@ -1,0 +1,15 @@
+{
+  "name": "node-workspace",
+  "version": "0.0.2",
+  "private": true,
+  "workspaces": [
+    "projects/bootstrap"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present"
+  },
+  "devDependencies": {
+    "dprint": "^0.47.6"
+  }
+}

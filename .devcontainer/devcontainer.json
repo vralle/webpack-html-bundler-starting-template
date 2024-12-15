@@ -14,17 +14,17 @@
   "remoteUser": "node", // Default "node"
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
-  "postCreateCommand": "sudo npm update -g ; cd /workspace/projects/bootstrap && npm install",
+  "postCreateCommand": {
+    "Update global packages": "sudo npm update -g",
+    "Install dependencies": "npm install"
+  },
   "customizations": {
     "vscode": {
+      // Considering moving formatting to git hooks
       "extensions": [
-        "CelianRiboulet.webvalidator",
-        "dbaeumer.vscode-eslint",
+        "dprint.dprint",
         "EditorConfig.EditorConfig",
-        "jock.svg",
-        "ms-azuretools.vscode-docker",
-        "streetsidesoftware.code-spell-checker",
-        "stylelint.vscode-stylelint"
+        "streetsidesoftware.code-spell-checker"
       ]
     }
   }

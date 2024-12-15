@@ -8,6 +8,7 @@
     "build": "npm-run-all --sequential webpack-build validate-html",
     "webpack-build": "webpack build --config webpack.config.mjs --define-process-env-node-env production",
     "start": "webpack serve --config webpack.config.mjs --define-process-env-node-env development",
+    "format": "dprint fmt",
     "validate-html": "node helpers/vnu-jar.mjs"
   },
   "devDependencies": {

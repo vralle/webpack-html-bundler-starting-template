@@ -1,4 +1,28 @@
 {
+  "[dockerfile]": {
+    // See https://dprint.dev/plugins/dockerfile/
+    "editor.defaultFormatter": "dprint.dprint",
+  },
+  "[javascript][typescript][javascriptreact][typescriptreact]": {
+    // See https://dprint.dev/plugins/typescript/
+    "editor.defaultFormatter": "dprint.dprint",
+  },
+  "[json][jsonc]": {
+    // See https://dprint.dev/plugins/json/
+    "editor.defaultFormatter": "dprint.dprint",
+  },
+  "[html]": {
+    // See https://dprint.dev/plugins/markup_fmt/
+    "editor.defaultFormatter": "dprint.dprint",
+  },
+  "[markdown][markdown-math]": {
+    // See https://dprint.dev/plugins/markdown/
+    "editor.defaultFormatter": "dprint.dprint",
+  },
+  "[yaml][github-actions-workflow]": {
+    // See https://dprint.dev/plugins/pretty_yaml/
+    "editor.defaultFormatter": "dprint.dprint",
+  },
   "eslint.useESLintClass": true,
   "eslint.useFlatConfig": true
 }
