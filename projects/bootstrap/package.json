@@ -1,6 +1,6 @@
 {
-  "name": "webpack-cache-issue-example",
-  "version": "0.0.1",
+  "name": "bootstrap-example",
+  "version": "0.0.2",
   "description": "Example of webpack project",
   "private": true,
   "type": "module",
@@ -9,7 +9,7 @@
     "webpack-build": "webpack build --config webpack.config.mjs --define-process-env-node-env production",
     "start": "webpack serve --config webpack.config.mjs --define-process-env-node-env development",
     "format": "dprint fmt",
-    "validate-html": "node helpers/vnu-jar.mjs"
+    "validate-html": "node scripts/vnu-jar.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

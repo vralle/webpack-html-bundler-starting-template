@@ -20,7 +20,7 @@
 const sharpEncodeOptions = {
   jpeg: {
     quality: 60,
-    chromaSubsampling: '4:2:0',
+    chromaSubsampling: "4:2:0",
   },
   png: {
     compressionLevel: 9,
@@ -32,7 +32,7 @@ const sharpEncodeOptions = {
     quality: 60, // default 80
     alphaQuality: 100,
     smartSubsample: true,
-    preset: 'photo', // one of: default, photo, picture, drawing, icon, text
+    preset: "photo", // one of: default, photo, picture, drawing, icon, text
   },
 };
 

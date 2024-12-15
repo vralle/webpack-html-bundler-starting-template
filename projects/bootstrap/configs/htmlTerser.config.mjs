@@ -1,4 +1,4 @@
-import cleanCssConfig from './cleanCss.config.mjs';
+import cleanCssConfig from "./cleanCss.config.mjs";
 
 /**
  * HTML Minifier Terser options

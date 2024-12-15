@@ -11,7 +11,7 @@
   "remoteEnv": {
     "TZ": "${localEnv:TZ:Europe/Berlin}"
   },
-  "remoteUser": "node", // Default "node"
+  "remoteUser": "node", // More info: https://aka.ms/dev-containers-non-root
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
   "postCreateCommand": {

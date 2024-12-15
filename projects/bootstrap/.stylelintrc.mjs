@@ -1,18 +1,22 @@
-/** @type {import('stylelint').Config} */
+/**
+ * Stylelint options
+ * @see https://stylelint.io/user-guide/configure/
+ * @type {import('stylelint').Config}
+ */
 export default {
-  extends: 'stylelint-config-twbs-bootstrap',
+  extends: "stylelint-config-twbs-bootstrap",
   cache: true,
   ignoreFiles: [
-    "dist/**"
+    "dist/**",
   ],
   overrides: [
     {
       files: [
-        "*.html"
+        "*.html",
       ],
       extends: [
-        "stylelint-config-html"
-      ]
+        "stylelint-config-html",
+      ],
     },
   ],
 };

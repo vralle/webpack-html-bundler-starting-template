@@ -11,6 +11,6 @@
     "target": "ES2020",
     // JavaScript Support
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": true
   }
 }

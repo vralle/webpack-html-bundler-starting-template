@@ -2,7 +2,9 @@
   "version": "0.2",
   "maxNumberOfProblems": 500,
   "dictionaries": [
-    "custom-words"
+    "!aws",
+    "!cryptocurrencies",
+    "fullstack"
   ],
   "dictionaryDefinitions": [
     {
@@ -13,6 +15,7 @@
   ],
   "useGitignore": true,
   "ignorePaths": [
-    "**/dist/**",
-  ],
+    ".cspell/**",
+    "**/dist/**"
+  ]
 }

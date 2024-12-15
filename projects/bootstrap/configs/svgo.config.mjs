@@ -6,9 +6,9 @@
 const svgoConfig = {
   multipass: true,
   plugins: [
-    'removeDimensions',
+    "removeDimensions",
     {
-      name: 'cleanupNumericValues',
+      name: "cleanupNumericValues",
       params: {
         floatPrecision: 3,
         leadingZero: true,
@@ -17,7 +17,7 @@ const svgoConfig = {
       },
     },
     {
-      name: 'preset-default',
+      name: "preset-default",
       params: {
         overrides: {
           removeUnknownsAndDefaults: {

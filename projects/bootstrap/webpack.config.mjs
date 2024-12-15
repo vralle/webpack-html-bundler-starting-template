@@ -2,23 +2,22 @@
  * Webpack configuration
  */
 
-import { join, parse, relative } from 'node:path';
-import process from 'node:process';
-import { styleText } from 'node:util';
+import { join, parse, relative } from "node:path";
+import process from "node:process";
+import { styleText } from "node:util";
 
 // Plugins
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import HtmlBundlerPlugin from 'html-bundler-webpack-plugin';
-import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin';
-import TerserPlugin from 'terser-webpack-plugin';
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import HtmlBundlerPlugin from "html-bundler-webpack-plugin";
+import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
+import cssMinimizerConfig from "./.webpack/plugins/cssMinimizer.config.mjs";
 
 // Configurations of tools
-import htmlTerserConfig from './configs/htmlTerser.config.mjs';
-import postcssConfig from './configs/postcss.config.mjs';
-import svgoConfig from './configs/svgo.config.mjs';
-import terserConfig from './configs/terser.config.mjs';
-
-import cssMinimizerConfig from './.webpack/plugins/cssMinimizer.config.mjs';
+import htmlTerserConfig from "./configs/htmlTerser.config.mjs";
+import postcssConfig from "./configs/postcss.config.mjs";
+import svgoConfig from "./configs/svgo.config.mjs";
+import terserConfig from "./configs/terser.config.mjs";
 
 /**
  * @typedef {import('webpack').Module} Module
@@ -27,20 +26,20 @@ import cssMinimizerConfig from './.webpack/plugins/cssMinimizer.config.mjs';
  */
 
 /**
- * @typedef {import('sass-embedded').Options<'sync'|'async'>} SassOptions
+ * @typedef {import('sass-embedded').Options<"sync"|"async">} SassOptions
  */
 
 // Project configuration
-const projectPath = new URL('./', import.meta.url).pathname;
-const projectOutputPath = join(projectPath, 'dist');
-const projectOutputAssetPath = join(projectOutputPath, 'static');
-const projectSrcPath = join(projectPath, 'src');
-const isProduction = function () { return (process.env['NODE_ENV'] === 'production'); };
+const projectPath = new URL("./", import.meta.url).pathname;
+const projectOutputPath = join(projectPath, "dist");
+const projectOutputAssetPath = join(projectOutputPath, "static");
+const projectSrcPath = join(projectPath, "src");
+const isProduction = () => process.env.NODE_ENV === "production";
 
-console.info('projectPath:', projectPath);
-console.info('projectOutputPath:', projectOutputPath);
-console.info('projectOutputAssetPath:', projectOutputAssetPath);
-console.info('projectSrcPath:', projectSrcPath);
+console.info(styleText("green", "projectPath: "), projectPath);
+console.info(styleText("green", "projectSrcPath: "), projectSrcPath);
+console.info(styleText("green", "projectOutputPath: "), projectOutputPath);
+console.info(styleText("green", "projectOutputAssetPath: "), projectOutputAssetPath);
 
 const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|tiff?|webp)(\?.*)?/i;
 
@@ -48,55 +47,58 @@ const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|
  * @type {WebpackConfig & DevServerConfig}
  */
 const webpackConfig = {
-  mode: isProduction() ? 'production' : 'development',
+  mode: isProduction() ? "production" : "development",
   output: {
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
-    filename: relative(projectOutputPath, join(projectOutputAssetPath, 'js', '[name].[contenthash].js')),
+    filename: relative(projectOutputPath, join(projectOutputAssetPath, "js", "[name].[contenthash].js")),
     chunkFilename({ filename }) {
-      const outputFilename = '[id].js';
+      const outputFilename = "[id].js";
       if (filename === undefined) {
-        return relative(projectOutputPath, join(projectOutputAssetPath, 'js', outputFilename));
+        return relative(projectOutputPath, join(projectOutputAssetPath, "js", outputFilename));
       }
       const basename = parse(filename).base;
-      return relative(projectOutputPath, join(projectOutputAssetPath, 'js', basename));
+      return relative(projectOutputPath, join(projectOutputAssetPath, "js", basename));
     },
-    cssFilename: relative(projectOutputPath, join(projectOutputAssetPath, 'css', '[name].[contenthash].css')),
+    cssFilename: relative(projectOutputPath, join(projectOutputAssetPath, "css", "[name].[contenthash].css")),
     assetModuleFilename({ filename }) {
-      const outputFilename = '[name][ext]';
+      const outputFilename = "[name][ext]";
 
       if (filename === undefined) {
-        return relative(projectOutputPath, join(projectOutputAssetPath, 'img', outputFilename));
+        return relative(projectOutputPath, join(projectOutputAssetPath, "img", outputFilename));
       }
 
+      // Copy the directory structure of the file path
       const relPath = relative(projectSrcPath, filename);
       const parsedPath = parse(relPath);
       const dir = parsedPath.dir.toLowerCase();
 
+      // Avoid uppercase file names.
+      // Caution: Control source file names to avoid file name collisions.
       const name = parsedPath.name.toLowerCase();
 
       const filePath = join(dir, `${name}[ext][query]`);
       const outputFilePath = relative(projectOutputPath, join(projectOutputAssetPath, filePath));
 
-      console.info(styleText('green', 'webpackConfig.assetModuleFilename in: '), filename);
-      console.info(styleText('green', 'webpackConfig.assetModuleFilename out: '), outputFilePath);
+      console.info(styleText("green", "webpackCfg.assetModuleFilename in: "), filename);
+      console.info(styleText("green", "webpackCfg.assetModuleFilename out: "), outputFilePath);
 
       return outputFilePath;
     },
   },
   resolve: {
     alias: {
-      '@src': projectSrcPath,
+      "@src": projectSrcPath,
     },
   },
   module: {
     rules: [
       {
         test: /\.[cm]?js(\?.*)?$/i,
-        include: join(projectSrcPath, 'js'),
+        include: join(projectSrcPath, "js"),
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           /** @see https://github.com/babel/babel-loader */
           options: {
             cacheDirectory: true,
@@ -105,30 +107,28 @@ const webpackConfig = {
       },
       {
         test: /\.s?css(\?.*)?$/i,
-        include: join(projectSrcPath, 'scss'),
+        include: join(projectSrcPath, "scss"),
         use: [
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             /** @see https://github.com/webpack-contrib/css-loader */
             options: {
-              importLoaders: isProduction() ? 1 : 0,
+              importLoaders: isProduction() ? 0 : 1,
             },
           },
           isProduction() === true && {
-            loader: 'postcss-loader',
+            loader: "postcss-loader",
+            /** @see https://github.com/webpack-contrib/postcss-loader */
             options: {
               postcssOptions: postcssConfig,
             },
           },
           {
-            loader: 'sass-loader',
-            /**
-             * Sass Loader
-             * @see https://github.com/webpack-contrib/sass-loader/blob/master/README.md#api
-             */
+            loader: "sass-loader",
+            /** @see https://github.com/webpack-contrib/sass-loader/ */
             options: {
-              implementation: 'sass-embedded',
-              api: 'modern-compiler', // 'modern-compiler' since sass-loader v14.2.0
+              implementation: "sass-embedded",
+              api: "modern-compiler", // 'modern-compiler' since sass-loader v14.2.0
               webpackImporter: false, // use sass.Options.loadPaths to improve performance
               warnRuleAsWarning: true, // Treats the @warn rule as a webpack warning.
               /**
@@ -136,8 +136,8 @@ const webpackConfig = {
                * @type {SassOptions}
                */
               sassOptions: {
-                loadPaths: ['node_modules'], // Required for api:modern, where webpack import doesn't work
-                style: isProduction() ? 'compressed' : 'expanded',
+                loadPaths: ["node_modules", "../../node_modules"],
+                style: isProduction() ? "compressed" : "expanded",
                 quietDeps: isProduction(),
               },
             },
@@ -146,15 +146,16 @@ const webpackConfig = {
       },
       {
         test: imgRegExp,
-        type: 'asset',
+        type: "asset",
         parser: {
           /**
-           * Control encoding to inline base64 url
+           * Convert linked image into an embedded image
            * @param {Buffer} source
            * @param {{filename: string; module: Module;}} context
            * @returns {boolean}
            */
           dataUrlCondition(source, { filename }) {
+            // Avoid converting logo for SEO reason
             if (/logo\.svg(\?.*)?$/i.test(filename)) {
               return false;
             }
@@ -169,32 +170,35 @@ const webpackConfig = {
     new HtmlBundlerPlugin({
       entry: {
         index: {
-          import: join(projectSrcPath, 'views', 'home.html'),
+          import: join(projectSrcPath, "views", "home.html"),
         },
       },
-      css: { // webpackConfig output.cssFilename and output.hashDigestLength don't work for css. Tested with HtmlBundlerPlugin 4.10.2
-        filename: relative(projectOutputPath, join(projectOutputAssetPath, 'css', '[name].[contenthash:9].css')),
+      css: {
+        test: /\.s?css(\?.*)?$/i,
+        // webpackCfg output.cssFilename and output.hashDigestLength don't work for css. Tested with HtmlBundlerPlugin 4.10.2
+        filename: relative(projectOutputPath, join(projectOutputAssetPath, "css", "[name].[contenthash:9].css")),
       },
       preprocessor: false,
+      /** @see https://github.com/webdiscus/html-bundler-webpack-plugin?tab=readme-ov-file#option-loader-options */
       loaderOptions: {
         sources: [
           {
-            tag: 'meta',
-            attributes: ['content'],
+            tag: "meta",
+            attributes: ["content"],
             filter({ attributes }) {
-              if (attributes['content']) {
-                return imgRegExp.test(attributes['content']);
+              if (attributes.content) {
+                return imgRegExp.test(attributes.content);
               }
 
               return false;
             },
           },
           {
-            tag: 'a',
-            attributes: ['href'],
+            tag: "a",
+            attributes: ["href"],
             filter({ attributes }) {
-              if (attributes['href']) {
-                return imgRegExp.test(attributes['href']);
+              if (attributes.href) {
+                return imgRegExp.test(attributes.href);
               }
 
               return false;
@@ -205,22 +209,18 @@ const webpackConfig = {
       minify: isProduction(),
       minifyOptions: htmlTerserConfig,
       hotUpdate: true,
-      verbose: 'auto',
+      verbose: "auto",
       watchFiles: {
-        paths: [
-          projectSrcPath,
-        ],
-        includes: [
-          /\.([cm]?js|ts|json|html|s?css)(\?.*)?$/i,
-        ],
+        paths: [projectSrcPath],
+        includes: [/\.([cm]?js|ts|json|html|s?css)(\?.*)?$/i],
       },
     }),
   ],
   optimization: {
     minimizer: [
       new ImageMinimizerPlugin({
-        test: imgRegExp,
-        include: join(projectSrcPath, 'img'),
+        test: /\.*.svg(\?.*)?/i,
+        include: join(projectSrcPath, "img"),
         deleteOriginalAssets: false,
         minimizer: {
           implementation: ImageMinimizerPlugin.svgoMinify,
@@ -238,16 +238,14 @@ const webpackConfig = {
       new CssMinimizerPlugin(cssMinimizerConfig),
     ],
   },
-  devtool: isProduction() ? false : 'inline-cheap-source-map',
+  devtool: isProduction() ? false : "inline-cheap-source-map",
   devServer: {
     static: {
       directory: projectOutputPath,
-      publicPath: '',
+      publicPath: "",
     },
     watchFiles: {
-      paths: [
-        `${projectSrcPath}/**`,
-      ],
+      paths: [`${projectSrcPath}/**`],
     },
     hot: true,
     client: {
@@ -257,13 +255,13 @@ const webpackConfig = {
   watchOptions: {
     aggregateTimeout: 600,
     poll: 1000,
-    ignored: ['**/node_modules/'],
+    ignored: ["**/node_modules/"],
   },
   stats: {
     errorDetails: true,
   },
   infrastructureLogging: {
-    level: 'verbose',
+    level: "verbose",
   },
   // cache: {
   //   type: 'filesystem', // fails with errors

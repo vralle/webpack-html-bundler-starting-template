@@ -6,7 +6,7 @@
 const cleanCssConfig = {
   level: 1,
   format: {
-    breakWith: 'lf',
+    breakWith: "lf",
   },
   rebase: false,
 };
