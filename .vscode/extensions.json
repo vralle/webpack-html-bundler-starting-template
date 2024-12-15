@@ -1,5 +1,13 @@
 {
   "recommendations": [
+    "CelianRiboulet.webvalidator",
+    "dprint.dprint",
+    "EditorConfig.EditorConfig",
+    "jock.svg",
     "ms-azuretools.vscode-docker",
+    "redhat.vscode-xml",
+    "redhat.vscode-yaml",
+    "streetsidesoftware.code-spell-checker",
+    "stylelint.vscode-stylelint"
   ]
 }
