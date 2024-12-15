@@ -1,5 +1,5 @@
 # From debian latest
-FROM mcr.microsoft.com/devcontainers/typescript-node
+FROM mcr.microsoft.com/devcontainers/javascript-node
 
 RUN set -eux; \
     apt-get update; \

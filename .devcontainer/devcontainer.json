@@ -1,12 +1,12 @@
 {
-  "name": "ms ts debian latest",
+  "name": "Node.js",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."
   },
   "runArgs": [
     "--name", // Container name
-    "ms-ts" // [a-zA-Z0-9][a-zA-Z0-9_.-]
+    "ms-node" // [a-zA-Z0-9][a-zA-Z0-9_.-]
   ],
   "remoteEnv": {
     "TZ": "${localEnv:TZ:Europe/Berlin}"
