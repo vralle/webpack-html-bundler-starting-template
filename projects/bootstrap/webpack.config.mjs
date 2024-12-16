@@ -34,6 +34,9 @@ const projectPath = new URL("./", import.meta.url).pathname;
 const projectOutputPath = join(projectPath, "dist");
 const projectOutputAssetPath = join(projectOutputPath, "static");
 const projectSrcPath = join(projectPath, "src");
+/** Copy directory structure from source image path */
+const copySrcImgDirStructure = true;
+
 const isProduction = () => process.env.NODE_ENV === "production";
 
 console.info(styleText("green", "projectPath: "), projectPath);
@@ -62,10 +65,10 @@ const webpackConfig = {
       return relative(projectOutputPath, join(projectOutputAssetPath, "js", basename));
     },
     cssFilename: relative(projectOutputPath, join(projectOutputAssetPath, "css", "[name].[contenthash].css")),
-    assetModuleFilename({ filename }) {
+    assetModuleFilename: ({ filename }) => {
       const outputFilename = "[name][ext]";
 
-      if (filename === undefined) {
+      if (!copySrcImgDirStructure || filename === undefined) {
         return relative(projectOutputPath, join(projectOutputAssetPath, "img", outputFilename));
       }
 
