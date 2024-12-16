@@ -24,6 +24,7 @@
       "extensions": [
         "dprint.dprint",
         "EditorConfig.EditorConfig",
+        "ms-vscode.live-server",
         "streetsidesoftware.code-spell-checker"
       ]
     }
