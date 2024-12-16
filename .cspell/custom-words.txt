@@ -1,3 +1,2 @@
 # Custom Dictionary Words
 devcontainers
-lightningcss
