@@ -5,8 +5,9 @@
  * @typedef {BasePluginOptions & DefinedDefaultMinimizerAndOptions} CssMinimizerPluginConfig
  */
 
+import browserslist from "browserslist";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
-import cleanCssConfig from "../../configs/cleanCss.config.mjs";
+import * as lightningcss from "lightningcss";
 
 /**
  * CssMinimizer options
@@ -14,8 +15,8 @@ import cleanCssConfig from "../../configs/cleanCss.config.mjs";
  * @type {CssMinimizerPluginConfig}
  */
 const cssMinimizerPluginConfig = {
-  minimizerOptions: cleanCssConfig,
-  minify: CssMinimizerPlugin.cleanCssMinify,
+  minify: CssMinimizerPlugin.lightningCssMinify,
+  minimizerOptions: lightningcss.browserslistToTargets(browserslist()),
 };
 
 export default cssMinimizerPluginConfig;
