@@ -31,9 +31,12 @@ import terserConfig from "./configs/terser.config.mjs";
 
 // Project configuration
 const projectPath = new URL("./", import.meta.url).pathname;
-const projectOutputPath = join(projectPath, "dist");
-const projectOutputAssetPath = join(projectOutputPath, "static");
 const projectSrcPath = join(projectPath, "src");
+const projectOutputPath = join(projectPath, "dist");
+const outputAssetPath = join(projectOutputPath, "static");
+const outputJsPath = join(outputAssetPath, "js");
+const outputCssPath = join(outputAssetPath, "css");
+const outputImgPath = join(outputAssetPath, "img");
 /** Copy directory structure from source image path */
 const copySrcImgDirStructure = true;
 
@@ -42,7 +45,7 @@ const isProduction = () => process.env.NODE_ENV === "production";
 console.info(styleText("green", "projectPath: "), projectPath);
 console.info(styleText("green", "projectSrcPath: "), projectSrcPath);
 console.info(styleText("green", "projectOutputPath: "), projectOutputPath);
-console.info(styleText("green", "projectOutputAssetPath: "), projectOutputAssetPath);
+console.info(styleText("green", "projectOutputAssetPath: "), outputAssetPath);
 
 const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|tiff?|webp)(\?.*)?/i;
 
@@ -55,25 +58,25 @@ const webpackConfig = {
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
-    filename: relative(projectOutputPath, join(projectOutputAssetPath, "js", "[name].[contenthash].js")),
+    filename: relative(projectOutputPath, join(outputJsPath, "[name].[contenthash].js")),
     chunkFilename({ filename }) {
       const outputFilename = "[id].js";
       if (filename === undefined) {
-        return relative(projectOutputPath, join(projectOutputAssetPath, "js", outputFilename));
+        return relative(projectOutputPath, join(outputJsPath, outputFilename));
       }
       const basename = parse(filename).base;
-      return relative(projectOutputPath, join(projectOutputAssetPath, "js", basename));
+      return relative(projectOutputPath, join(outputJsPath, basename));
     },
-    cssFilename: relative(projectOutputPath, join(projectOutputAssetPath, "css", "[name].[contenthash].css")),
+    cssFilename: relative(projectOutputPath, join(outputCssPath, "[name].[contenthash].css")),
     assetModuleFilename: ({ filename }) => {
       const outputFilename = "[name][ext]";
 
       if (!copySrcImgDirStructure || filename === undefined) {
-        return relative(projectOutputPath, join(projectOutputAssetPath, "img", outputFilename));
+        return relative(projectOutputPath, join(outputImgPath, outputFilename));
       }
 
       // Copy the directory structure of the file path
-      const relPath = relative(projectSrcPath, filename);
+      const relPath = relative(join(projectSrcPath, "img"), filename);
       const parsedPath = parse(relPath);
       const dir = parsedPath.dir.toLowerCase();
 
@@ -82,7 +85,7 @@ const webpackConfig = {
       const name = parsedPath.name.toLowerCase();
 
       const filePath = join(dir, `${name}[ext][query]`);
-      const outputFilePath = relative(projectOutputPath, join(projectOutputAssetPath, filePath));
+      const outputFilePath = relative(projectOutputPath, join(outputImgPath, filePath));
 
       console.info(styleText("green", "webpackCfg.assetModuleFilename in: "), filename);
       console.info(styleText("green", "webpackCfg.assetModuleFilename out: "), outputFilePath);
@@ -116,7 +119,7 @@ const webpackConfig = {
             loader: "css-loader",
             /** @see https://github.com/webpack-contrib/css-loader */
             options: {
-              importLoaders: isProduction() ? 0 : 1,
+              importLoaders: isProduction() ? 1 : 2,
             },
           },
           isProduction() === true && {
@@ -179,7 +182,7 @@ const webpackConfig = {
       css: {
         test: /\.s?css(\?.*)?$/i,
         // webpackCfg output.cssFilename and output.hashDigestLength don't work for css. Tested with HtmlBundlerPlugin 4.10.2
-        filename: relative(projectOutputPath, join(projectOutputAssetPath, "css", "[name].[contenthash:9].css")),
+        filename: relative(projectOutputPath, join(outputCssPath, "[name].[contenthash:9].css")),
       },
       preprocessor: false,
       /** @see https://github.com/webdiscus/html-bundler-webpack-plugin?tab=readme-ov-file#option-loader-options */
@@ -223,7 +226,6 @@ const webpackConfig = {
     minimizer: [
       new ImageMinimizerPlugin({
         test: /\.*.svg(\?.*)?/i,
-        include: join(projectSrcPath, "img"),
         deleteOriginalAssets: false,
         minimizer: {
           implementation: ImageMinimizerPlugin.svgoMinify,
