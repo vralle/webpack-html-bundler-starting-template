@@ -13,6 +13,9 @@
   },
   "remoteUser": "node", // More info: https://aka.ms/dev-containers-non-root
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ],
   "workspaceFolder": "/workspace",
   "postCreateCommand": {
     "Update global packages": "sudo npm update -g",
