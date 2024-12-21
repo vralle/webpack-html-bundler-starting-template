@@ -271,7 +271,7 @@ const webpackConfig = {
     level: "verbose",
   },
   // cache: {
-  //   type: 'filesystem', // fails with errors
+  //   type: 'filesystem',
   // }
 };
 
