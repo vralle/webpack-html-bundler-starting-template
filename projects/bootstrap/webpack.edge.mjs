@@ -103,12 +103,9 @@ const webpackConfig = {
         include: join(projectSrcPath, "js"),
         use: {
           loader: "swc-loader",
-          /**
-           * @see https://swc.rs/docs/configuration/compilation
-           */
+          /** @see https://swc.rs/docs/usage/swc-loader */
           options: {
             env: {
-              /** @see https://swc.rs/docs/configuration/supported-browsers */
               targets: browsersData,
             },
           },

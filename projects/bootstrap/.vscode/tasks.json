@@ -21,7 +21,7 @@
       "label": "npm: build edge",
       "detail": "Build project with edge tools",
       "group": {
-        "kind": "build",
+        "kind": "build"
       },
       "presentation": {
         "reveal": "always",
