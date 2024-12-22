@@ -144,7 +144,7 @@ const webpackConfig = {
               sassOptions: {
                 loadPaths: ["node_modules", "../../node_modules"],
                 style: isProduction() ? "compressed" : "expanded",
-                quietDeps: isProduction(),
+                quietDeps: true,
               },
             },
           },
