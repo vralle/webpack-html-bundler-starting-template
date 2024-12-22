@@ -9,6 +9,7 @@ import { styleText } from "node:util";
 // Plugins
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import HtmlBundlerPlugin from "html-bundler-webpack-plugin";
+import HtmlMinimizerPlugin from "html-minimizer-webpack-plugin";
 import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import { SwcMinifyWebpackPlugin } from "swc-minify-webpack-plugin";
 
@@ -16,8 +17,8 @@ import browserslist from "browserslist";
 import * as lightningcss from "lightningcss";
 
 // Configurations of tools
-import htmlTerserConfig from "./configs/htmlTerser.config.mjs";
 import svgoConfig from "./configs/svgo.config.mjs";
+import swcHtmlConfig from "./configs/swcHtml.config.mjs";
 /** Leave browserslist args empty to load .browserslistrc or set it directly */
 const browsersData = browserslist();
 
@@ -206,8 +207,7 @@ const webpackConfig = {
           },
         ],
       },
-      minify: isProduction(),
-      minifyOptions: htmlTerserConfig,
+      minify: false,
       hotUpdate: true,
       verbose: "auto",
       watchFiles: {
@@ -232,6 +232,11 @@ const webpackConfig = {
         },
       }),
       new SwcMinifyWebpackPlugin(),
+      new HtmlMinimizerPlugin({
+        minify: HtmlMinimizerPlugin.swcMinify,
+        // @ts-ignore
+        minimizerOptions: swcHtmlConfig,
+      }),
       new CssMinimizerPlugin({
         minify: CssMinimizerPlugin.lightningCssMinify,
         /** @type {import('css-minimizer-webpack-plugin').CustomOptions} */
@@ -259,7 +264,7 @@ const webpackConfig = {
   watchOptions: {
     aggregateTimeout: 600,
     poll: 1000,
-    ignored: ["**/node_modules/"],
+    ignored: ["node_modules/**"],
   },
   stats: {
     errorDetails: true,
