@@ -11,10 +11,6 @@
     // See https://dprint.dev/plugins/json/
     "editor.defaultFormatter": "dprint.dprint"
   },
-  "[html]": {
-    // See https://dprint.dev/plugins/markup_fmt/
-    "editor.defaultFormatter": "dprint.dprint"
-  },
   "[markdown][markdown-math]": {
     // See https://dprint.dev/plugins/markdown/
     "editor.defaultFormatter": "dprint.dprint"
