@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignore": ["**/dist/**"]
+  },
   "formatter": {
     "enabled": false,
     "useEditorconfig": false,
@@ -13,7 +16,10 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "complexity": {
+        "noForEach": "warn"
+      }
     }
   },
   "vcs": {
