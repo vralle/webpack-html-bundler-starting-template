@@ -7,6 +7,7 @@ import process from "node:process";
 import { styleText } from "node:util";
 
 // Plugins
+import CompressionPlugin from "compression-webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import HtmlBundlerPlugin from "html-bundler-webpack-plugin";
 import HtmlMinimizerPlugin from "html-minimizer-webpack-plugin";
@@ -168,6 +169,7 @@ const webpackConfig = {
     ],
   },
   plugins: [
+    new CompressionPlugin(),
     new HtmlBundlerPlugin({
       entry: {
         index: {
