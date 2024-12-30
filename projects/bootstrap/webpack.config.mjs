@@ -41,7 +41,7 @@ const outputImgPath = join(outputAssetPath, "img");
 /** Copy directory structure from source image path */
 const copySrcImgDirStructure = true;
 
-const isProduction = () => process.env.NODE_ENV === "production";
+const isProduction = () => process.env["NODE_ENV"] === "production";
 
 console.info(styleText("green", "projectPath: "), projectPath);
 console.info(styleText("green", "projectSrcPath: "), projectSrcPath);
@@ -194,8 +194,8 @@ const webpackConfig = {
             tag: "meta",
             attributes: ["content"],
             filter({ attributes }) {
-              if (attributes.content) {
-                return imgRegExp.test(attributes.content);
+              if (attributes["content"]) {
+                return imgRegExp.test(attributes["content"]);
               }
 
               return false;
@@ -205,8 +205,8 @@ const webpackConfig = {
             tag: "a",
             attributes: ["href"],
             filter({ attributes }) {
-              if (attributes.href) {
-                return imgRegExp.test(attributes.href);
+              if (attributes["href"]) {
+                return imgRegExp.test(attributes["href"]);
               }
 
               return false;
