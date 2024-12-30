@@ -23,6 +23,8 @@ import swcHtmlConfig from "./configs/swcHtml.config.mjs";
 /** Leave browserslist args empty to load .browserslistrc or set it directly */
 const browsersData = browserslist();
 
+import projectPaths from "./configs/projectPaths.mjs";
+
 /**
  * @typedef {import('webpack').Module} Module
  * @typedef {import('webpack').Configuration} WebpackConfig
@@ -30,13 +32,13 @@ const browsersData = browserslist();
  */
 
 // Project configuration
-const projectPath = new URL("./", import.meta.url).pathname;
-const projectSrcPath = join(projectPath, "src");
-const projectOutputPath = join(projectPath, "dist");
-const projectOutputAssetPath = join(projectOutputPath, "static");
-const projectOutputJsPath = join(projectOutputAssetPath, "js");
-const projectOutputCssPath = join(projectOutputAssetPath, "css");
-const projectOutputImgPath = join(projectOutputAssetPath, "img");
+const projectPath = projectPaths.root;
+const projectSrcPath = projectPaths.src;
+const projectOutputPath = projectPaths.output;
+const outputAssetPath = join(projectOutputPath, "static");
+const outputJsDir = join(projectPaths.outputAssetDir, "js");
+const outputCssDir = join(projectPaths.outputAssetDir, "css");
+const outputImgDir = join(projectPaths.outputAssetDir, "img");
 /** Copy directory structure from source image path */
 const copySrcImgDirStructure = true;
 
@@ -45,7 +47,7 @@ const isProduction = () => process.env["NODE_ENV"] === "production";
 console.info(styleText("green", "projectPath: "), projectPath);
 console.info(styleText("green", "projectSrcPath: "), projectSrcPath);
 console.info(styleText("green", "projectOutputPath: "), projectOutputPath);
-console.info(styleText("green", "projectOutputAssetPath: "), projectOutputAssetPath);
+console.info(styleText("green", "projectOutputAssetPath: "), outputAssetPath);
 
 const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|tiff?|webp)(\?.*)?/i;
 
@@ -58,21 +60,21 @@ const webpackConfig = {
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
-    filename: relative(projectOutputPath, join(projectOutputJsPath, "[name].[contenthash].js")),
+    filename: join(outputJsDir, "[name].[contenthash].js"),
     chunkFilename({ filename }) {
       const outputFilename = "[id].js";
       if (filename === undefined) {
-        return relative(projectOutputPath, join(projectOutputJsPath, outputFilename));
+        return join(outputJsDir, outputFilename);
       }
       const basename = parse(filename).base;
-      return relative(projectOutputPath, join(projectOutputJsPath, basename));
+      return join(outputJsDir, basename);
     },
-    cssFilename: relative(projectOutputPath, join(projectOutputCssPath, "[name].[contenthash].css")),
+    cssFilename: join(outputCssDir, "[name].[contenthash].css"),
     assetModuleFilename: ({ filename }) => {
       const outputFilename = "[name][ext]";
 
       if (!copySrcImgDirStructure || filename === undefined) {
-        return relative(projectOutputPath, join(projectOutputImgPath, outputFilename));
+        return join(outputImgDir, outputFilename);
       }
 
       // Copy the directory structure of the file path
@@ -85,7 +87,7 @@ const webpackConfig = {
       const name = parsedPath.name.toLowerCase();
 
       const filePath = join(dir, `${name}[ext][query]`);
-      const outputFilePath = relative(projectOutputPath, join(projectOutputImgPath, filePath));
+      const outputFilePath = join(outputImgDir, filePath);
 
       console.info(styleText("green", "webpackCfg.assetModuleFilename in: "), filename);
       console.info(styleText("green", "webpackCfg.assetModuleFilename out: "), outputFilePath);
@@ -179,7 +181,7 @@ const webpackConfig = {
       css: {
         test: /\.s?css(\?.*)?$/i,
         // webpackCfg output.cssFilename and output.hashDigestLength don't work for css. Tested with HtmlBundlerPlugin 4.10.2
-        filename: relative(projectOutputPath, join(projectOutputCssPath, "[name].[contenthash:9].css")),
+        filename: join(outputCssDir, "[name].[contenthash:9].css"),
       },
       preprocessor: false,
       /** @see https://github.com/webdiscus/html-bundler-webpack-plugin?tab=readme-ov-file#option-loader-options */
