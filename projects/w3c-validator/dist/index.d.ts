@@ -18,8 +18,12 @@ interface VnuReport {
     messages: VnuMessage[];
 }
 type Logger = (vnuReport: VnuReport) => void;
+interface Options {
+    logger?: Logger;
+    ignores?: string[];
+}
 declare function stdoutLogger(vnuReport: VnuReport): void;
-declare function validator(files: string[], logger?: undefined | Logger): void;
+declare function validator(files: string[], options?: Options): void;
 export { stdoutLogger };
-export type { Logger, VnuMessage, VnuReport };
+export type { Logger, Options, VnuMessage, VnuReport };
 export default validator;

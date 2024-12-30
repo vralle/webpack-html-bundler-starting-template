@@ -14,6 +14,17 @@ import vnu from "vnu-jar";
  * https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback
  */
 const MAX_BUFFER = 20_000 * 1024;
+// Note that the ignores are string regular expressions.
+const IGNORES = [
+    // "autocomplete" is included in <button> and checkboxes and radio <input>s due to
+    // Firefox's non-standard autocomplete behavior - see https://bugzilla.mozilla.org/show_bug.cgi?id=654072
+    "Attribute “autocomplete” is only allowed when the input type is.*",
+    "Attribute “autocomplete” not allowed on element “button” at this point.",
+    // Per https://www.w3.org/TR/html-aria/#docconformance having "aria-disabled" on a link is
+    // NOT RECOMMENDED, but it's still valid - we explain in the docs that it's not ideal,
+    // and offer more robust alternatives, but also need to show a less-than-ideal example
+    "An “aria-disabled” attribute whose value is “true” should not be specified on an “a” element that has an “href” attribute.",
+];
 function stdoutLogger(vnuReport) {
     const messages = [];
     if (vnuReport.messages.length === 0) {
@@ -34,14 +45,13 @@ function stdoutLogger(vnuReport) {
     }
     console.error("\n\n" + messages.join("\n\n") + "\n\n");
 }
-function validator(files, logger = undefined) {
+function validator(files, options = {}) {
     if (files.length === 0) {
         console.error(styleText("red", "No files to check. W3C test stop running."));
         exit(1);
     }
-    if (!logger) {
-        logger = stdoutLogger;
-    }
+    const logger = options.logger ? options.logger : stdoutLogger;
+    const ignores = options.ignores ? options.ignores : IGNORES;
     execFile("java", ["-version"], { maxBuffer: MAX_BUFFER, shell: true }, (error, _stdout, stderr) => {
         if (error) {
             console.error(styleText("red", "Java is missing. W3C test stop running."));
@@ -74,18 +84,6 @@ function validator(files, logger = undefined) {
         console.info(styleText("green", "W3C test start running..."));
         console.info(styleText("green", "Files to check:\n"), files.join(", "));
         const is32bitJava = !/64-Bit/.test(stderr);
-        // vnu-jar accepts multiple ignores joined with a `|`.
-        // Also note that the ignores are string regular expressions.
-        const ignores = [
-            // "autocomplete" is included in <button> and checkboxes and radio <input>s due to
-            // Firefox's non-standard autocomplete behavior - see https://bugzilla.mozilla.org/show_bug.cgi?id=654072
-            "Attribute “autocomplete” is only allowed when the input type is.*",
-            "Attribute “autocomplete” not allowed on element “button” at this point.",
-            // Per https://www.w3.org/TR/html-aria/#docconformance having "aria-disabled" on a link is
-            // NOT RECOMMENDED, but it's still valid - we explain in the docs that it's not ideal,
-            // and offer more robust alternatives, but also need to show a less-than-ideal example
-            "An “aria-disabled” attribute whose value is “true” should not be specified on an “a” element that has an “href” attribute.",
-        ].join("|");
         const args = [
             "-jar",
             `"${vnu}"`,
@@ -94,11 +92,14 @@ function validator(files, logger = undefined) {
             "--asciiquotes",
             "--skip-non-html",
             "--Werror",
-            `--filterpattern "${ignores}"`,
         ];
         // For the 32-bit Java we need to pass `-Xss512k`
         if (is32bitJava) {
             args.splice(0, 0, "-Xss512k");
+        }
+        if (ignores.length > 0) {
+            const ignoresArgs = ignores.join("|");
+            args.push(`--filterpattern "${ignoresArgs}"`);
         }
         const child = spawn("java", [...args, ...files], {
             shell: true,

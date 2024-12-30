@@ -1,13 +1,14 @@
 {
   "name": "@vralle/w3c-validator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lint HTML, CSS, and SVG with vnu-jar",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format": "dprint fmt"
   },
   "dependencies": {
     "@types/vnu-jar": "^17.11.2",
