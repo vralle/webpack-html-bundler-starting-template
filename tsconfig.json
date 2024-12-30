@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    // Type Checking
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+    // Modules
+    "module": "ES2020",
+    "allowArbitraryExtensions": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    // Interop Constraints
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    // Emit
+    "noEmit": true,
+    // JavaScript Support
+    "allowJs": true,
+    "checkJs": true
+  },
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**"
+  ],
+  "typeAcquisition": {
+    "enable": true
+  }
+}
