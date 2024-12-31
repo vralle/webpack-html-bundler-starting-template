@@ -1,4 +1,4 @@
-import validator from "@vralle/w3c-validator";
+import validator from "@vralle/nu-html-checker";
 import { globSync } from "glob";
 import projectPaths from "../configs/projectPaths.mjs";
 

@@ -1,6 +1,6 @@
 {
-  "name": "node-workspace",
-  "version": "0.1.0",
+  "name": "node-monorepo",
+  "version": "0.2.0",
   "private": true,
   "workspaces": [
     "projects/*"
