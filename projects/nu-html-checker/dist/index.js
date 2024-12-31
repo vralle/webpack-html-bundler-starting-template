@@ -25,64 +25,75 @@ const IGNORES = [
     // and offer more robust alternatives, but also need to show a less-than-ideal example
     "An “aria-disabled” attribute whose value is “true” should not be specified on an “a” element that has an “href” attribute.",
 ];
-function stdoutLogger(vnuReport) {
+function defaultLogger(vnuReport, files) {
     const messages = [];
-    if (vnuReport.messages.length === 0) {
-        console.log("\n", styleText("green", "The W3C validator found no errors. Good job!"), "\n");
-        return;
+    const errors = vnuReport.messages.filter((message) => message.type === "error");
+    const warnings = vnuReport.messages.filter((message) => message.type === "info" && message.subType === "warning");
+    const infos = vnuReport.messages.filter((message) => message.type === "info" && message.subType !== "warning");
+    for (const message of vnuReport.messages) {
+        const type = message.type === "info" && message.subType === "warning" ? message.subType : message.type;
+        const output = [];
+        const label = type.toUpperCase();
+        const typeColor = message.type === "error" ? "red" : "yellow";
+        const url = message.url?.replace("file:", "");
+        output.push(`${url}:${message.lastLine}:${message.firstColumn}`);
+        output.push(styleText(typeColor, `[${label}] ${message.message}`));
+        output.push(message.extract);
+        messages.push(output.join("\n"));
     }
-    const errorMessages = vnuReport.messages.filter((message) => message.type === "error");
-    const warningMessages = vnuReport.messages.filter((message) => message.type === "warning");
-    console.error(styleText("red", `\nW3C test found ${errorMessages.length} error(s) and ${warningMessages.length} warning(s).`));
-    for (const error of vnuReport.messages) {
-        const message = [];
-        const type = String(error.type).charAt(0).toUpperCase() + String(error.type).slice(1);
-        const typeColor = error.type === "error" ? "red" : "yellow";
-        message.push(styleText(typeColor, `${type} in `) + `${error.url} at line ${error.lastLine}:${error.hiliteStart}-${error.lastLine}:${error.hiliteLength}`);
-        message.push(error.message);
-        message.push(error.extract);
-        messages.push(message.join("\n"));
+    if (messages.length > 0) {
+        console.error("\n" + messages.join("\n\n") + "\n");
     }
-    console.error("\n\n" + messages.join("\n\n") + "\n\n");
+    console.info(styleText("blue", `Checked ${files.length} file(s)`));
+    if (errors.length) {
+        console.info(styleText("red", `Found ${errors.length} error(s).`));
+    }
+    if (warnings.length) {
+        console.info(styleText("yellow", `Found ${warnings.length} warning(s).`));
+    }
+    if (infos.length) {
+        console.info(styleText("yellow", `Found ${warnings.length} tip(s).`));
+    }
+    if (errors.length === 0 && warnings.length === 0) {
+        console.log("\n", styleText("green", "Nu checker found no errors or warnings."), "\n");
+    }
 }
-function validator(files, options = {}) {
+function validate(files, options = {}) {
     if (files.length === 0) {
-        console.error(styleText("red", "No files to check. W3C test stop running."));
+        console.error(styleText("red", "No files to check. Nu validation stopped."));
         exit(1);
     }
-    const logger = options.logger ? options.logger : stdoutLogger;
+    const logger = options.logger ? options.logger : defaultLogger;
     const ignores = options.ignores ? options.ignores : IGNORES;
     execFile("java", ["-version"], { maxBuffer: MAX_BUFFER, shell: true }, (error, _stdout, stderr) => {
         if (error) {
-            console.error(styleText("red", "Java is missing. W3C test stop running."));
+            console.error(styleText("red", "Java is missing. Nu validation stopped."));
             console.error(error);
             return;
         }
         if (stderr === null) {
-            console.error(styleText("red", "Something went wrong. Java output is null. W3C test stop running."));
+            console.error(styleText("red", "Something went wrong. Java output is null. Nu validation stopped."));
             exit(1);
         }
         const versionMatched = stderr.match(/(?:java|openjdk) version "(.*)"/);
         if (versionMatched === null || !versionMatched[1]) {
-            console.error(styleText("red", "Something went wrong. Java version not found. W3C test stop running."));
+            console.error(styleText("red", "Something went wrong. Java version not found. Nu validation stopped."));
             exit(1);
         }
         const version = versionMatched[1];
         const [majorVersion, minorVersion] = version.split(".").map(Number);
         if (majorVersion === undefined || minorVersion === undefined) {
-            console.error(styleText("red", "Something went wrong. Can't determine installed Java version. W3C test stop running."));
+            console.error(styleText("red", "Something went wrong. Can't determine installed Java version. Nu validation stopped."));
             exit(1);
         }
         if ((majorVersion !== 1 && majorVersion < 8) || (majorVersion === 1 && minorVersion < 8)) {
-            console.error(styleText("red", `\nUnsupported Java version used: ${version}. Java 8 environment or up is required. W3C test stop running.`));
+            console.error(styleText("red", `\nUnsupported Java version used: ${version}. Java 8 environment or up is required. Nu validation stopped.`));
             exit(1);
         }
         if (!files.length) {
-            console.info(styleText("red", "No files found to check. W3C test stop running."));
+            console.info(styleText("red", "No files found to check. Nu validation stopped."));
             exit(1);
         }
-        console.info(styleText("green", "W3C test start running..."));
-        console.info(styleText("green", "Files to check:\n"), files.join(", "));
         const is32bitJava = !/64-Bit/.test(stderr);
         const args = [
             "-jar",
@@ -101,6 +112,8 @@ function validator(files, options = {}) {
             const ignoresArgs = ignores.join("|");
             args.push(`--filterpattern "${ignoresArgs}"`);
         }
+        console.info(styleText("blue", "Nu validation start running..."));
+        console.info(styleText("blue", "Files to check:\n"), files.join(", "));
         const child = spawn("java", [...args, ...files], {
             shell: true,
             stdio: "pipe",
@@ -112,10 +125,10 @@ function validator(files, options = {}) {
             }
         });
         child.on("exit", (code) => {
-            logger(JSON.parse(vnuOutput.join("")));
+            logger(JSON.parse(vnuOutput.join("")), files);
             exit(code);
         });
     });
 }
-export { stdoutLogger };
-export default validator;
+export { defaultLogger };
+export default validate;

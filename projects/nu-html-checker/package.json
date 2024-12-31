@@ -1,6 +1,6 @@
 {
-  "name": "@vralle/w3c-validator",
-  "version": "0.1.1",
+  "name": "@vralle/nu-html-checker",
+  "version": "0.2.0",
   "description": "Lint HTML, CSS, and SVG with vnu-jar",
   "license": "MIT",
   "type": "module",
