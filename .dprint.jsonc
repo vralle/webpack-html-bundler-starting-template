@@ -3,13 +3,9 @@
   "lineWidth": 1000,
   "newLineKind": "lf",
   "useTabs": false,
-  "dockerfile": { // See https://dprint.dev/plugins/dockerfile/
-  },
   "json": { // See https://dprint.dev/plugins/json/
     // This would be good to do in known-JSONC files, but VS Code warns on trailing commas.
     "trailingCommas": "never"
-  },
-  "markdown": { // See https://dprint.dev/plugins/markdown/
   },
   "typescript": { // See https://dprint.dev/plugins/typescript/
     "lineWidth": 180,
@@ -17,10 +13,6 @@
     "quoteProps": "asNeeded",
     "quoteStyle": "preferDouble",
     "semiColons": "always"
-  },
-  "yaml": { // See https://dprint.dev/plugins/pretty_yaml/
-    "indentWidth": 2,
-    "quotes": "preferDouble"
   },
   "excludes": [
     "**/.git",
@@ -30,9 +22,6 @@
   ],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.93.3.wasm",
-    "https://plugins.dprint.dev/json-0.19.4.wasm",
-    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.5.0.wasm",
-    "https://plugins.dprint.dev/dockerfile-0.3.2.wasm",
-    "https://plugins.dprint.dev/markdown-0.17.8.wasm"
+    "https://plugins.dprint.dev/json-0.19.4.wasm"
   ]
 }

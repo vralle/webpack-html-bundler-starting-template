@@ -11,6 +11,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@dprint/json": "^0.19.4",
+    "@dprint/typescript": "^0.93.3",
     "dprint": "^0.48.0"
   }
 }
