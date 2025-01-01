@@ -13,10 +13,12 @@
     "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
   ],
   "workspaceFolder": "/workspace",
-  "postCreateCommand": {
-    "Update global packages": "sudo npm update -g",
-    "Install dependencies": "npm install"
+  "updateContentCommand": {
+    "Update owner of files in workspace dir": "sudo chown -R node /workspace",
+    "Update access permissions of files in workspace dir": "sudo chmod -R 1777 /workspace",
+    "Update global packages": "sudo npm update -g && npm cache clean --force > /dev/null 2>&1"
   },
+  "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
       // Considering moving formatting to git hooks

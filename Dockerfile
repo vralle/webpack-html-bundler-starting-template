@@ -7,5 +7,6 @@ RUN set -eux; \
     apt-get install default-jre --yes --no-install-recommends; \
     rm -rf /var/lib/apt/lists/*
 
-COPY docker-entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["docker-entrypoint.sh"]
+RUN set -eux; \
+    su node -c "umask 0002 && npm install -g typescript" \
+    && npm cache clean --force > /dev/null 2>&1
