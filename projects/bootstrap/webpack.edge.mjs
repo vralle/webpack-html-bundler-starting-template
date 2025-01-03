@@ -13,10 +13,11 @@ import HtmlMinimizerPlugin from "html-minimizer-webpack-plugin";
 import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import { SwcMinifyWebpackPlugin } from "swc-minify-webpack-plugin";
 
+/** Tools */
 import browserslist from "browserslist";
-import * as lightningcss from "lightningcss";
+import { browserslistToTargets } from "lightningcss";
 
-// Configurations of tools
+// Configurations
 import svgoConfig from "./configs/svgo.config.mjs";
 import swcHtmlConfig from "./configs/swcHtml.config.mjs";
 /** Leave browserslist args empty to load .browserslistrc or set it directly */
@@ -55,19 +56,13 @@ const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|
  */
 const webpackConfig = {
   mode: isProduction() ? "production" : "development",
+  target: `browserslist:${browsersData.toString()}`,
   output: {
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
     filename: join(outputJsDir, "[name].[contenthash].js"),
-    chunkFilename({ filename }) {
-      const outputFilename = "[id].js";
-      if (filename === undefined) {
-        return join(outputJsDir, outputFilename);
-      }
-      const basename = parse(filename).base;
-      return join(outputJsDir, basename);
-    },
+    chunkFilename: join(outputJsDir, isProduction() ? "[id].[contenthash].js" : "[name].[contenthash].js"),
     cssFilename: join(outputCssDir, "[name].[contenthash].css"),
     assetModuleFilename: ({ filename }) => {
       const outputFilename = "[name][ext]";
@@ -87,9 +82,6 @@ const webpackConfig = {
 
       const filePath = join(dir, `${name}[ext][query]`);
       const outputFilePath = join(outputImgDir, filePath);
-
-      console.info(styleText("green", "webpackCfg.assetModuleFilename in: "), filename);
-      console.info(styleText("green", "webpackCfg.assetModuleFilename out: "), outputFilePath);
 
       return outputFilePath;
     },
@@ -224,7 +216,6 @@ const webpackConfig = {
       new ImageMinimizerPlugin({
         test: /\.*.svg(\?.*)?/i,
         include: join(projectSrcPath, "img"),
-        exclude: "**/node_modules*/**",
         deleteOriginalAssets: false,
         minimizer: {
           implementation: ImageMinimizerPlugin.svgoMinify,
@@ -244,7 +235,7 @@ const webpackConfig = {
         /** @type {import('css-minimizer-webpack-plugin').CustomOptions} */
         minimizerOptions: {
           /** @see https://lightningcss.dev/transpilation.html */
-          targets: lightningcss.browserslistToTargets(browsersData),
+          targets: browserslistToTargets(browsersData),
         },
       }),
     ],

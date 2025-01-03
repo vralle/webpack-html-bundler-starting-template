@@ -13,11 +13,16 @@ import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import cssMinimizerConfig from "./.webpack/plugins/cssMinimizer.config.mjs";
 
-// Configurations of tools
+// Tools
+import browserslist from "browserslist";
+
+// Configurations
 import htmlTerserConfig from "./configs/htmlTerser.config.mjs";
 import postcssConfig from "./configs/postcss.config.mjs";
 import svgoConfig from "./configs/svgo.config.mjs";
 import terserConfig from "./configs/terser.config.mjs";
+/** Leave browserslist args empty to load .browserslistrc or set it directly */
+const browsersData = browserslist();
 
 import projectPaths from "./configs/projectPaths.mjs";
 
@@ -56,19 +61,13 @@ const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|
  */
 const webpackConfig = {
   mode: isProduction() ? "production" : "development",
+  target: `browserslist:${browsersData.toString()}`,
   output: {
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
     filename: join(outputJsDir, "[name].[contenthash].js"),
-    chunkFilename({ filename }) {
-      const outputFilename = "[id].js";
-      if (filename === undefined) {
-        return join(outputJsDir, outputFilename);
-      }
-      const basename = parse(filename).base;
-      return join(outputJsDir, basename);
-    },
+    chunkFilename: join(outputJsDir, isProduction() ? "[id].[contenthash].js" : "[name].[contenthash].js"),
     cssFilename: join(outputCssDir, "[name].[contenthash].css"),
     assetModuleFilename: ({ filename }) => {
       const outputFilename = "[name][ext]";
@@ -88,9 +87,6 @@ const webpackConfig = {
 
       const filePath = join(dir, `${name}[ext][query]`);
       const outputFilePath = join(outputImgDir, filePath);
-
-      console.info(styleText("green", "webpackCfg.assetModuleFilename in: "), filename);
-      console.info(styleText("green", "webpackCfg.assetModuleFilename out: "), outputFilePath);
 
       return outputFilePath;
     },
