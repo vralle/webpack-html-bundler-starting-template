@@ -270,9 +270,6 @@ const webpackConfig = {
   infrastructureLogging: {
     level: "verbose",
   },
-  // cache: {
-  //   type: 'filesystem',
-  // }
 };
 
 export default webpackConfig;
