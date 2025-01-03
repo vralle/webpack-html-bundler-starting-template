@@ -1,7 +1,4 @@
-import {
-  dirname,
-  join
-} from "path";
+import { dirname, join } from "path";
 import url from "url";
 
 /**
