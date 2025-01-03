@@ -13,8 +13,8 @@ const swcHtmlConfig = {
   sortSpaceSeparatedAttributeValues: false,
   sortAttributes: true,
   // Omitting quotes or closing tags can cause unexpected results.
-  quotes: true,
-  tagOmission: false,
+  quotes: false,
+  tagOmission: true,
 };
 
 export default swcHtmlConfig;

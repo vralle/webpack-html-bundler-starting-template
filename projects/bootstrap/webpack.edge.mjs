@@ -175,6 +175,12 @@ const webpackConfig = {
         // webpackCfg output.cssFilename and output.hashDigestLength don't work for css. Tested with HtmlBundlerPlugin 4.10.2
         filename: join(outputCssDir, "[name].[contenthash:9].css"),
       },
+      preload: [
+        {
+          test: /\.(m?js)$/,
+          as: 'script',
+        },
+      ],
       preprocessor: false,
       /** @see https://github.com/webdiscus/html-bundler-webpack-plugin?tab=readme-ov-file#option-loader-options */
       loaderOptions: {
