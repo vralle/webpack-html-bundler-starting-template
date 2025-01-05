@@ -5,7 +5,7 @@
  * Licensed under MIT
  */
 
-import { Buffer } from "node:buffer";
+import type { Buffer } from "node:buffer";
 import { execFile, spawn } from "node:child_process";
 import { exit } from "node:process";
 import { styleText } from "node:util";
@@ -51,7 +51,7 @@ interface Options {
  */
 const MAX_BUFFER = 20_000 * 1024;
 
-// Note that the ignores are string regular expressions.
+/** The ignores are string regular expressions. */
 const IGNORES = [
   // "autocomplete" is included in <button> and checkboxes and radio <input>s due to
   // Firefox's non-standard autocomplete behavior - see https://bugzilla.mozilla.org/show_bug.cgi?id=654072
@@ -68,15 +68,23 @@ function defaultLogger(vnuReport: VnuReport, files: string[]) {
   const errors = vnuReport.messages.filter((message) => message.type === "error");
   const warnings = vnuReport.messages.filter((message) => message.type === "info" && message.subType === "warning");
   const infos = vnuReport.messages.filter((message) => message.type === "info" && message.subType !== "warning");
+  const nonDocumentErrors = vnuReport.messages.filter((message) => message.type === "non-document-error");
+  const colors: Record<string, "red" | "yellow" | "white"> = { error: "red", "non-document-error": "red", warning: "yellow", info: "white" };
   for (const message of vnuReport.messages) {
     const type = message.type === "info" && message.subType === "warning" ? message.subType : message.type;
     const output = [];
     const label = type.toUpperCase();
-    const typeColor = message.type === "error" ? "red" : "yellow";
+    const typeColor = colors[type] ?? "redBright";
     const url = message.url?.replace("file:", "");
-    output.push(`${url}:${message.lastLine}:${message.firstColumn}`);
-    output.push(styleText(typeColor, `[${label}] ${message.message}`));
-    output.push(message.extract);
+    if (url) {
+      output.push(`${url}:${message.lastLine}:${message.firstColumn}`);
+    }
+    if (message.message) {
+      output.push(styleText(typeColor, `[${label}] ${message.message}`));
+    }
+    if (message.extract) {
+      output.push(message.extract);
+    }
     messages.push(output.join("\n"));
   }
 
@@ -85,6 +93,11 @@ function defaultLogger(vnuReport: VnuReport, files: string[]) {
   }
 
   console.info(styleText("blue", `Checked ${files.length} file(s)`));
+
+  if (nonDocumentErrors.length) {
+    console.info(styleText("red", `${nonDocumentErrors.length} document(s) being validated could not be examined to the end.`));
+  }
+
   if (errors.length) {
     console.info(styleText("red", `Found ${errors.length} error(s).`));
   }
@@ -94,10 +107,10 @@ function defaultLogger(vnuReport: VnuReport, files: string[]) {
   }
 
   if (infos.length) {
-    console.info(styleText("yellow", `Found ${warnings.length} tip(s).`));
+    console.info(styleText("yellow", `Found ${infos.length} tip(s).`));
   }
 
-  if (errors.length === 0 && warnings.length === 0) {
+  if (errors.length + warnings.length + nonDocumentErrors.length === 0) {
     console.log("\n", styleText("green", "Nu checker found no errors or warnings."), "\n");
   }
 }
@@ -141,11 +154,6 @@ function validate(files: string[], options: Options = {}) {
       exit(1);
     }
 
-    if (!files.length) {
-      console.info(styleText("red", "No files found to check. Nu validation stopped."));
-      exit(1);
-    }
-
     const is32bitJava = !/64-Bit/.test(stderr);
 
     const args = [
@@ -182,10 +190,8 @@ function validate(files: string[], options: Options = {}) {
 
     const vnuOutput: string[] = [];
 
-    child.stderr?.on("data", (data) => {
-      if (Buffer.isBuffer(data)) {
-        vnuOutput.push(data.toString());
-      }
+    child.stderr?.on("data", (data: Buffer) => {
+      vnuOutput.push(data.toString());
     });
 
     child.on("exit", (code) => {
