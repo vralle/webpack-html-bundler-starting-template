@@ -16,6 +16,7 @@ import { SwcMinifyWebpackPlugin } from "swc-minify-webpack-plugin";
 /** Tools */
 import browserslist from "browserslist";
 import { browserslistToTargets } from "lightningcss";
+import svgToMiniDataURI from "mini-svg-data-uri";
 
 // Configurations
 import svgoConfig from "./configs/svgo.config.mjs";
@@ -138,6 +139,15 @@ const webpackConfig = {
             },
           },
         ],
+      },
+      {
+        test: /\.svg(\?.*)?$/i,
+        type: "asset/inline",
+        generator: {
+          dataUrl: (/** @type {Buffer} */ content) => {
+            return svgToMiniDataURI(content.toString());
+          },
+        },
       },
       {
         test: imgRegExp,

@@ -15,6 +15,7 @@ import cssMinimizerConfig from "./.webpack/plugins/cssMinimizer.config.mjs";
 
 // Tools
 import browserslist from "browserslist";
+import svgToMiniDataURI from "mini-svg-data-uri";
 
 // Configurations
 import htmlTerserConfig from "./configs/htmlTerser.config.mjs";
@@ -148,6 +149,15 @@ const webpackConfig = {
             },
           },
         ],
+      },
+      {
+        test: /\.svg(\?.*)?$/i,
+        type: "asset/inline",
+        generator: {
+          dataUrl: (/** @type {Buffer} */ content) => {
+            return svgToMiniDataURI(content.toString());
+          },
+        },
       },
       {
         test: imgRegExp,
