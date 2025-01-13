@@ -6,14 +6,16 @@
 const swcHtmlConfig = {
   minifyJson: false,
   minifyJs: false,
-  minifyCss: true,
+  minifyCss: false,
   collapseWhitespaces: "smart",
   removeComments: true,
+  removeRedundantAttributes: "smart",
+  collapseBooleanAttributes: true,
   normalizeAttributes: true,
   sortSpaceSeparatedAttributeValues: false,
   sortAttributes: true,
-  // Omitting quotes or closing tags can cause unexpected results.
   quotes: true,
+  // tagOmission can cause unexpected results.
   tagOmission: false,
 };
 
