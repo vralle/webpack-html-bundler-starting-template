@@ -7,7 +7,8 @@
 
 import type { Buffer } from "node:buffer";
 import { execFile, spawn } from "node:child_process";
-import { exit } from "node:process";
+import { relative } from "node:path";
+import { cwd, exit } from "node:process";
 import { styleText } from "node:util";
 import vnu from "vnu-jar";
 
@@ -177,7 +178,8 @@ function validate(files: string[], options: Options = {}) {
     }
 
     console.info(styleText("blue", "Nu validation start running..."));
-    console.info(styleText("blue", "Files to check:\n"), files.join(", "));
+    const cwd_dir = cwd();
+    console.info(styleText("blue", "Files to check:\n"), files.map((file) => relative(cwd_dir, file)).join(", "));
 
     const child = spawn(
       "java",
