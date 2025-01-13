@@ -143,6 +143,7 @@ const webpackConfig = {
                 loadPaths: ["node_modules", "../../node_modules"],
                 style: isProduction() ? "compressed" : "expanded",
                 quietDeps: true,
+                silenceDeprecations: ["import"],
               },
             },
           },
