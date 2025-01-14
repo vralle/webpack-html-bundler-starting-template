@@ -5,12 +5,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm-run-all --sequential webpack-build validate-html",
-    "webpack-build": "webpack build --config webpack.config.mjs --define-process-env-node-env production",
-    "build-edge": "webpack build --config webpack.edge.mjs --define-process-env-node-env production",
-    "start": "webpack serve --config webpack.config.mjs --define-process-env-node-env development",
+    "build": "npm-run-all --sequential build:stable lint:html",
+    "build:stable": "webpack build --node-env production --stats --config webpack.config.mjs",
+    "build:edge": "webpack build --node-env production --stats --config webpack.edge.mjs",
+    "start": "webpack serve --config webpack.config.mjs --node-env development",
     "format": "dprint fmt",
-    "validate-html": "node scripts/nu-html-checker.mjs"
+    "lint:html": "node scripts/nu-html-checker.mjs"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -54,7 +54,7 @@
     "terser": "^5.37.0",
     "terser-webpack-plugin": "^5.3.11",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4",
+    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
