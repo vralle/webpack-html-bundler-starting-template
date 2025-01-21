@@ -5,8 +5,8 @@
  * @typedef {BasePluginOptions & DefinedDefaultMinimizerAndOptions} CssMinimizerPluginConfig
  */
 
+import { cleanCssConfig } from "@vralle/tool-configs";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
-import cleanCssConfig from "../../configs/cleanCss.config.mjs";
 
 /**
  * CssMinimizer options

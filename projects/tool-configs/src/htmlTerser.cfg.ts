@@ -1,10 +1,11 @@
-import cleanCssConfig from "./cleanCss.config.mjs";
+import type { Options } from "html-minifier-terser";
+import cleanCssConfig from "./cleanCss.cfg.js";
 
 /**
  * HTML Minifier Terser options
  * @see https://github.com/terser/html-minifier-terser#options-quick-reference
  */
-const htmlTerserConfig = {
+const htmlTerserConfig: Options = {
   collapseWhitespace: true,
   removeComments: true,
   removeRedundantAttributes: false, // prevents styling bug when input "type=text" is removed

@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    // Modules
+    "module": "Node16",
+    "moduleResolution": "node16",
+    // Emit
+    "declaration": true,
+    "noEmit": false,
+    "outDir": "dist"
+  },
+  "exclude": ["node_modules/**", "dist/**"]
+}

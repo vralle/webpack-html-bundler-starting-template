@@ -1,12 +1,13 @@
+import type { Options } from "@swc/html";
+
 /**
  * @swc/html minimizer options
  * @see https://github.com/swc-project/swc/blob/main/packages/html/index.ts
- * @type {import("@swc/html").Options}
  */
-const swcHtmlConfig = {
-  minifyJson: false,
-  minifyJs: false,
-  minifyCss: false,
+const swcHtmlConfig: Options = {
+  minifyJson: true,
+  minifyJs: true,
+  minifyCss: true,
   collapseWhitespaces: "smart",
   removeComments: true,
   removeRedundantAttributes: "smart",

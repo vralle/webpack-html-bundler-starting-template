@@ -3,8 +3,10 @@
  */
 
 import { join, parse, relative } from "node:path";
-import process from "node:process";
+import { env } from "node:process";
 import { styleText } from "node:util";
+
+import webpack from "webpack";
 
 // Plugins
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
@@ -14,27 +16,16 @@ import TerserPlugin from "terser-webpack-plugin";
 import cssMinimizerConfig from "./.webpack/plugins/cssMinimizer.config.mjs";
 
 // Tools
-import browserslist from "browserslist";
 import svgToMiniDataURI from "mini-svg-data-uri";
 
 // Configurations
-import htmlTerserConfig from "./configs/htmlTerser.config.mjs";
-import postcssConfig from "./configs/postcss.config.mjs";
-import svgoConfig from "./configs/svgo.config.mjs";
-import terserConfig from "./configs/terser.config.mjs";
-/** Leave browserslist args empty to load .browserslistrc or set it directly */
-const browsersData = browserslist();
-
+import { htmlTerserConfig, postcssConfig, svgoConfig, terserConfig } from "@vralle/tool-configs";
 import projectPaths from "./configs/projectPaths.mjs";
 
 /**
  * @typedef {import('webpack').Module} Module
  * @typedef {import('webpack').Configuration} WebpackConfig
  * @typedef {import('webpack-dev-server').Configuration} DevServerConfig
- */
-
-/**
- * @typedef {import('sass-embedded').Options<"sync"|"async">} SassOptions
  */
 
 // Project configuration
@@ -48,7 +39,10 @@ const outputImgDir = join(projectPaths.outputAssetDir, "img");
 /** Copy directory structure from source image path */
 const copySrcImgDirStructure = true;
 
-const isProduction = () => process.env["NODE_ENV"] === "production";
+// biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
+const isProduction = () => env["NODE_ENV"] === "production";
+// biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
+const PUBLIC_URL = env["PUBLIC_URL"] === undefined ? env["PUBLIC_URL"] : (new URL("/", env["PUBLIC_URL"])).href;
 
 console.info(styleText("green", "projectPath: "), projectPath);
 console.info(styleText("green", "projectSrcPath: "), projectSrcPath);
@@ -62,8 +56,8 @@ const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|
  */
 const webpackConfig = {
   mode: isProduction() ? "production" : "development",
-  target: `browserslist:${browsersData.toString()}`,
   output: {
+    publicPath: PUBLIC_URL || "auto",
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
@@ -118,7 +112,7 @@ const webpackConfig = {
             loader: "css-loader",
             /** @see https://github.com/webpack-contrib/css-loader */
             options: {
-              importLoaders: isProduction() ? 1 : 2,
+              importLoaders: isProduction() ? 2 : 1,
             },
           },
           isProduction() === true && {
@@ -138,7 +132,7 @@ const webpackConfig = {
               warnRuleAsWarning: true, // Treats the @warn rule as a webpack warning.
               /**
                * @see https://sass-lang.com/documentation/js-api/interfaces/options/
-               * @type {SassOptions}
+               * @type {import('sass-embedded').Options<"sync"|"async">} SassOptions
                */
               sassOptions: {
                 loadPaths: ["node_modules", "../../node_modules"],
@@ -207,7 +201,9 @@ const webpackConfig = {
             tag: "meta",
             attributes: ["content"],
             filter({ attributes }) {
+              // biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
               if (attributes["content"]) {
+                // biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
                 return imgRegExp.test(attributes["content"]);
               }
 
@@ -218,7 +214,9 @@ const webpackConfig = {
             tag: "a",
             attributes: ["href"],
             filter({ attributes }) {
+              // biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
               if (attributes["href"]) {
+                // biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
                 return imgRegExp.test(attributes["href"]);
               }
 
@@ -233,8 +231,10 @@ const webpackConfig = {
       verbose: "auto",
       watchFiles: {
         paths: [projectSrcPath],
-        includes: [/\.([cm]?js|ts|json|html|s?css)(\?.*)?$/i],
       },
+    }),
+    new webpack.DefinePlugin({
+      "process.env.PUBLIC_URL": PUBLIC_URL ? JSON.stringify(PUBLIC_URL) : "",
     }),
   ],
   optimization: {

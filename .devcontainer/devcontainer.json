@@ -21,7 +21,6 @@
   "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
-      // Considering moving formatting to git hooks
       "extensions": [
         "dprint.dprint",
         "EditorConfig.EditorConfig",

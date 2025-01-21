@@ -1,8 +1,8 @@
 {
-  "name": "@vralle/nu-html-checker",
-  "version": "0.2.1",
-  "description": "Lint HTML, CSS, and SVG with vnu-jar",
-  "license": "MIT",
+  "name": "@vralle/tool-configs",
+  "version": "0.3.0",
+  "description": "Shareable tool configurations",
+  "private": true,
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,10 +11,9 @@
     "format": "dprint fmt",
     "lint": "eslint --fix-dry-run --cache --cache-location .cache/.eslintcache ."
   },
-  "dependencies": {
-    "vnu-jar": "^24.10.17"
-  },
   "devDependencies": {
-    "@types/vnu-jar": "^17.11.2"
+    "@types/clean-css": "^4.2.11",
+    "@types/html-minifier-terser": "^7.0.2",
+    "postcss-load-config": "^6.0.1"
   }
 }

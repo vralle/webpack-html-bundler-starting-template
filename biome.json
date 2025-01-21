@@ -19,6 +19,9 @@
       "recommended": true,
       "complexity": {
         "noForEach": "warn"
+      },
+      "suspicious": {
+        "noImplicitAnyLet": "warn"
       }
     }
   },

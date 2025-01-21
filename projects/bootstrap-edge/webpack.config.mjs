@@ -3,8 +3,10 @@
  */
 
 import { join, parse, relative } from "node:path";
-import process from "node:process";
+import { env } from "node:process";
 import { styleText } from "node:util";
+
+import webpack from "webpack";
 
 // Plugins
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
@@ -19,8 +21,7 @@ import { browserslistToTargets } from "lightningcss";
 import svgToMiniDataURI from "mini-svg-data-uri";
 
 // Configurations
-import svgoConfig from "./configs/svgo.config.mjs";
-import swcHtmlConfig from "./configs/swcHtml.config.mjs";
+import { svgoConfig, swcHtmlConfig } from "@vralle/tool-configs";
 /** Leave browserslist args empty to load .browserslistrc or set it directly */
 const browsersData = browserslist();
 
@@ -43,7 +44,10 @@ const outputImgDir = join(projectPaths.outputAssetDir, "img");
 /** Copy directory structure from source image path */
 const copySrcImgDirStructure = true;
 
-const isProduction = () => process.env["NODE_ENV"] === "production";
+// biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
+const isProduction = () => env["NODE_ENV"] === "production";
+// biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
+const PUBLIC_URL = env["PUBLIC_URL"] === undefined ? env["PUBLIC_URL"] : (new URL("/", env["PUBLIC_URL"])).href;
 
 console.info(styleText("green", "projectPath: "), projectPath);
 console.info(styleText("green", "projectSrcPath: "), projectSrcPath);
@@ -57,8 +61,9 @@ const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|
  */
 const webpackConfig = {
   mode: isProduction() ? "production" : "development",
-  target: `browserslist:${browsersData.toString()}`,
+  target: ["browserslist: ", browsersData.toString()].join(""),
   output: {
+    publicPath: PUBLIC_URL || "auto",
     path: projectOutputPath,
     clean: true,
     hashDigestLength: 9,
@@ -96,7 +101,6 @@ const webpackConfig = {
     rules: [
       {
         test: /\.[cm]?js(\?.*)?$/i,
-        include: join(projectSrcPath, "js"),
         use: {
           loader: "swc-loader",
           /** @see https://swc.rs/docs/usage/swc-loader */
@@ -109,13 +113,12 @@ const webpackConfig = {
       },
       {
         test: /\.s?css(\?.*)?$/i,
-        include: join(projectSrcPath, "scss"),
         use: [
           {
             loader: "css-loader",
             /** @see https://github.com/webpack-contrib/css-loader */
             options: {
-              importLoaders: isProduction() ? 0 : 1,
+              importLoaders: 1,
             },
           },
           {
@@ -143,6 +146,7 @@ const webpackConfig = {
       {
         test: /\.svg(\?.*)?$/i,
         type: "asset/inline",
+        /** A custom encoder for converting a file content in data uri */
         generator: {
           dataUrl: (/** @type {Buffer} */ content) => {
             return svgToMiniDataURI(content.toString());
@@ -155,7 +159,7 @@ const webpackConfig = {
         include: projectSrcPath,
         parser: {
           /**
-           * Convert linked image into an embedded image
+           * Conditions of inlining file content as DataURI
            * @param {Buffer} source
            * @param {{filename: string; module: Module;}} context
            * @returns {boolean}
@@ -198,22 +202,16 @@ const webpackConfig = {
             tag: "meta",
             attributes: ["content"],
             filter({ attributes }) {
-              if (attributes["content"]) {
-                return imgRegExp.test(attributes["content"]);
-              }
-
-              return false;
+              // biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
+              return attributes["content"] ? imgRegExp.test(attributes["content"]) : false;
             },
           },
           {
             tag: "a",
             attributes: ["href"],
             filter({ attributes }) {
-              if (attributes["href"]) {
-                return imgRegExp.test(attributes["href"]);
-              }
-
-              return false;
+              // biome-ignore lint/complexity/useLiteralKeys: ts noPropertyAccessFromIndexSignature
+              return attributes["href"] ? imgRegExp.test(attributes["href"]) : false;
             },
           },
         ],
@@ -223,9 +221,10 @@ const webpackConfig = {
       verbose: "auto",
       watchFiles: {
         paths: [projectSrcPath],
-        includes: [/\.([cm]?js|ts|json|html|s?css)(\?.*)?$/i],
-        excludes: [/node_modules/],
       },
+    }),
+    new webpack.DefinePlugin({
+      "process.env.PUBLIC_URL": PUBLIC_URL ? JSON.stringify(PUBLIC_URL) : "",
     }),
   ],
   optimization: {
@@ -244,14 +243,17 @@ const webpackConfig = {
       new SwcMinifyWebpackPlugin(),
       new HtmlMinimizerPlugin({
         minify: HtmlMinimizerPlugin.swcMinify,
-        // @ts-ignore
+        // @ts-expect-error Set the instance type of HtmlMinimizerPlugin to avoid minimizerOptions type error
         minimizerOptions: swcHtmlConfig,
       }),
       new CssMinimizerPlugin({
         minify: CssMinimizerPlugin.lightningCssMinify,
-        /** @type {import('css-minimizer-webpack-plugin').CustomOptions} */
+        /**
+         * @see https://lightningcss.dev/transpilation.html
+         * @type {Omit<import("lightningcss").TransformOptions<import("lightningcss").CustomAtRules>, "code"|"filename">}
+         */
         minimizerOptions: {
-          /** @see https://lightningcss.dev/transpilation.html */
+          // @ts-expect-error Set the instance type of CssMinimizerPlugin to avoid minimizerOptions type error
           targets: browserslistToTargets(browsersData),
         },
       }),

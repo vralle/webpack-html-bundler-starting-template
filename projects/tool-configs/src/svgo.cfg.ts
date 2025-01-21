@@ -1,9 +1,10 @@
+import type { Config } from "svgo";
+
 /**
  * SVGO options
  * @see https://github.com/svg/svgo
- * @type {import('svgo').Config}
  */
-const svgoConfig = {
+const svgoConfig: Config = {
   multipass: true,
   plugins: [
     "removeDimensions",

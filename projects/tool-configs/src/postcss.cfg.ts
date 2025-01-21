@@ -1,14 +1,10 @@
-/**
- * @typedef {import('postcss-load-config').Config} Config
- * @typedef {import('postcss-load-config').ConfigFn} ConfigFn
- */
+import type { Config, ConfigFn } from "postcss-load-config";
 
 /**
  * PostCss config
  * @see https://github.com/postcss/postcss-load-config
- * @type {ConfigFn | Config}
  */
-const postcssConfig = {
+const postcssConfig: Config | ConfigFn = {
   map: false,
   plugins: {
     autoprefixer: {

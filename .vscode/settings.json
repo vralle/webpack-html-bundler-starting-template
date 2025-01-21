@@ -8,5 +8,6 @@
     "editor.defaultFormatter": "dprint.dprint"
   },
   "eslint.useESLintClass": true,
-  "eslint.useFlatConfig": true
+  "eslint.useFlatConfig": true,
+  "livePreview.serverRoot": "projects"
 }
