@@ -61,8 +61,8 @@ const webpackConfig = {
   output: {
     publicPath: PUBLIC_URL || "auto",
     path: projectOutputPath,
-    crossOriginLoading: "anonymous",
     clean: true,
+    crossOriginLoading: "anonymous",
     hashDigestLength: 9,
     filename: join(outputJsDir, "[name].[contenthash].js"),
     chunkFilename: join(outputJsDir, isProduction() ? "[id].[contenthash].js" : "[name].[contenthash].js"),

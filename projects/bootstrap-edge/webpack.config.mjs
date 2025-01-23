@@ -68,6 +68,7 @@ const webpackConfig = {
     publicPath: PUBLIC_URL || "auto",
     path: projectOutputPath,
     clean: true,
+    crossOriginLoading: "anonymous",
     hashDigestLength: 9,
     filename: join(outputJsDir, "[name].[contenthash].js"),
     chunkFilename: join(outputJsDir, isProduction() ? "[id].[contenthash].js" : "[name].[contenthash].js"),
@@ -196,6 +197,7 @@ const webpackConfig = {
           as: "script",
         },
       ],
+      integrity: "auto",
       preprocessor: false,
       /** @see https://github.com/webdiscus/html-bundler-webpack-plugin?tab=readme-ov-file#option-loader-options */
       loaderOptions: {
