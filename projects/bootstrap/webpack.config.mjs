@@ -2,8 +2,10 @@
  * Webpack configuration
  */
 
+import { Buffer } from "node:buffer";
 import { join, parse, relative } from "node:path";
 import { env } from "node:process";
+import { URL } from "node:url";
 import { styleText } from "node:util";
 
 import webpack from "webpack";
@@ -59,6 +61,7 @@ const webpackConfig = {
   output: {
     publicPath: PUBLIC_URL || "auto",
     path: projectOutputPath,
+    crossOriginLoading: "anonymous",
     clean: true,
     hashDigestLength: 9,
     filename: join(outputJsDir, "[name].[contenthash].js"),
@@ -193,6 +196,7 @@ const webpackConfig = {
           as: "script",
         },
       ],
+      integrity: "auto",
       preprocessor: false,
       /** @see https://github.com/webdiscus/html-bundler-webpack-plugin?tab=readme-ov-file#option-loader-options */
       loaderOptions: {

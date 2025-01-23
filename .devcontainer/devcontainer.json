@@ -1,5 +1,5 @@
 {
-  "name": "Node.js",
+  "name": "Node.js workspace: HTML starter templates",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."

@@ -1,5 +1,5 @@
 import { dirname, join } from "node:path";
-import url from "node:url";
+import url, { URL } from "node:url";
 
 /**
  * @typedef {Object} ProjectPaths

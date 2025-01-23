@@ -7,7 +7,8 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "format": "npm run format --workspaces --if-present"
+    "format": "npm run format --workspaces --if-present",
+    "lint:js": "eslint --fix-dry-run --cache --cache-location .cache/.eslintcache ."
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

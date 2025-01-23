@@ -1,21 +1,27 @@
-import pluginJs from "@eslint/js";
+import eslintJs from "@eslint/js";
 import globals from "globals";
-import tseslint from "typescript-eslint";
+import eslintTs from "typescript-eslint";
 
 /**
  * Eslint options
  * @see https://eslint.org/docs/latest/use/configure/
  * @type {import('typescript-eslint').ConfigArray}
  */
-export default tseslint.config(
-  pluginJs.configs.recommended,
-  tseslint.configs.recommended,
+export default eslintTs.config(
+  eslintJs.configs.recommended,
+  eslintTs.configs.recommended,
+  eslintTs.configs.stylistic,
   {
-    ignores: ["**/dist/**"],
+    rules: {
+      "@typescript-eslint/no-namespace": ["error", { allowDeclarations: true, allowDefinitionFiles: true }],
+    },
   },
   {
-    files: ["**/*.{js,mjs}"],
-    ignores: ["**/src/js/**"],
+    ignores: ["**/dist"],
+  },
+  {
+    files: ["*.{js,mjs,ts}"],
+    ignores: ["**/src/js"],
     languageOptions: { globals: globals.node },
   },
   {

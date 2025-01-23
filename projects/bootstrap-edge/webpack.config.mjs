@@ -2,8 +2,10 @@
  * Webpack configuration
  */
 
+import { Buffer } from "node:buffer";
 import { join, parse, relative } from "node:path";
 import { env } from "node:process";
+import { URL } from "node:url";
 import { styleText } from "node:util";
 
 import webpack from "webpack";
