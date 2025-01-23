@@ -231,11 +231,7 @@ const webpackConfig = {
       },
       minify: isProduction(),
       minifyOptions: htmlTerserConfig,
-      hotUpdate: true,
       verbose: "auto",
-      watchFiles: {
-        paths: [projectSrcPath],
-      },
     }),
     new webpack.DefinePlugin({
       "process.env.PUBLIC_URL": PUBLIC_URL ? JSON.stringify(PUBLIC_URL) : "",
@@ -268,18 +264,11 @@ const webpackConfig = {
       directory: projectOutputPath,
       publicPath: "",
     },
-    watchFiles: {
-      paths: [`${projectSrcPath}/**`],
-    },
-    hot: true,
-    client: {
-      progress: true,
-    },
+    watchFiles: [`${projectSrcPath}/**`],
   },
   watchOptions: {
-    aggregateTimeout: 600,
-    poll: 1000,
-    ignored: ["**/node_modules/"],
+    poll: true,
+    ignored: ["**/node_modules"],
   },
   stats: {
     errorDetails: true,
