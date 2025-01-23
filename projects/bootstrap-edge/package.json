@@ -7,6 +7,7 @@
   "scripts": {
     "build": "npm-run-all --sequential build:webpack lint:html",
     "build:webpack": "webpack build --node-env production --stats --config webpack.config.mjs",
+    "build:public": "export PUBLIC_URL=\"https://example.site/\" && npm run build",
     "start": "webpack serve --config webpack.config.mjs --node-env development",
     "format": "dprint fmt",
     "lint": "npm-run-all --aggregate-output --parallel lint:html lint:styles lint:js",
