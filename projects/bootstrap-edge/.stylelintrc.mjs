@@ -7,7 +7,8 @@ export default {
   extends: "stylelint-config-twbs-bootstrap",
   cache: true,
   ignoreFiles: [
-    "dist/",
+    "dist/**",
+    "node_modules/**",
   ],
   overrides: [
     {

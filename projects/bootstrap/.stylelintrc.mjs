@@ -8,6 +8,7 @@ export default {
   cache: true,
   ignoreFiles: [
     "dist/**",
+    "node_modules/**",
   ],
   overrides: [
     {
