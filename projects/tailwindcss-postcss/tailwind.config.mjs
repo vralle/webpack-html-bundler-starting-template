@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 const config = {
-  theme: {},
-  plugins: [],
+  content: {
+    files: ["./src/views/**/*.html"],
+  },
 };
 
 export default config;
