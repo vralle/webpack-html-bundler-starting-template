@@ -1,0 +1,20 @@
+@layer base {
+  body {
+    @apply text-base font-normal;
+  }
+
+  h1 {
+    @apply text-4xl font-semibold;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold;
+  }
+
+  a {
+    @apply text-blue-600;
+  }
+  a:hover {
+    @apply underline;
+  }
+}

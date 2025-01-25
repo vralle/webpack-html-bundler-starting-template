@@ -1,0 +1,44 @@
+{
+  "name": "tailwind-postcss-example",
+  "version": "0.1.0",
+  "description": "Example webpack project for compiling HTML stats pages using modern tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm-run-all --sequential build:webpack lint:html",
+    "build:webpack": "webpack build --node-env production --stats --config webpack.config.mjs",
+    "build:public": "export PUBLIC_URL=\"https://example.site/\" && npm run build",
+    "start": "webpack serve --config webpack.config.mjs --node-env development",
+    "format": "dprint fmt",
+    "lint": "npm-run-all --aggregate-output --parallel lint:html lint:styles lint:js",
+    "lint:js": "eslint --fix-dry-run --cache --cache-location .cache/.eslintcache .",
+    "lint:html": "node scripts/nu-html-checker.mjs"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.10.8",
+    "@swc/html": "^1.10.8",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@vralle/nu-html-checker": "^0.2.1",
+    "@vralle/tool-configs": "^0.3.0",
+    "browserslist": "^4.24.4",
+    "css-loader": "^7.1.2",
+    "glob": "^11.0.1",
+    "html-bundler-webpack-plugin": "^4.15.2",
+    "html-minimizer-webpack-plugin": "^5.0.0",
+    "image-minimizer-webpack-plugin": "^4.1.3",
+    "mini-svg-data-uri": "^1.4.4",
+    "npm-run-all2": "^7.0.2",
+    "postcss": "^8.5.1",
+    "sharp": "^0.33.5",
+    "svgo": "^3.3.2",
+    "swc-loader": "^0.2.6",
+    "swc-minify-webpack-plugin": "^2.1.3",
+    "tailwindcss": "^4.0.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
+  },
+  "dependencies": {
+    "alpinejs": "^3.14.8"
+  }
+}

@@ -9,5 +9,8 @@
   },
   "eslint.useESLintClass": true,
   "eslint.useFlatConfig": true,
-  "livePreview.serverRoot": "projects"
+  "livePreview.serverRoot": "projects",
+  "files.associations": {
+    "projects/tailwindcss-postcss/src/css/**/*.css": "tailwindcss"
+  }
 }
