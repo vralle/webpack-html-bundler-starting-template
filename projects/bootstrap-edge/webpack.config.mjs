@@ -63,7 +63,6 @@ const imgRegExp = /\.(avif|gif|heif|ico|jp[2x]|j2[kc]|jpe?g|jpe|jxl|png|raw|svg|
  */
 const webpackConfig = {
   mode: isProduction() ? "production" : "development",
-  target: ["browserslist: ", browsersData.toString()].join(""),
   output: {
     publicPath: PUBLIC_URL || "auto",
     path: projectOutputPath,
@@ -263,13 +262,12 @@ const webpackConfig = {
   devServer: {
     static: {
       directory: projectOutputPath,
-      publicPath: "",
     },
-    watchFiles: [`${projectSrcPath}/**`],
+    watchFiles: [`${projectSrcPath}/**/*.{html,scss,svg}`],
   },
   watchOptions: {
     poll: true,
-    ignored: ["**/node_modules"],
+    ignored: ["**/node_modules/**"],
   },
   stats: {
     errorDetails: true,

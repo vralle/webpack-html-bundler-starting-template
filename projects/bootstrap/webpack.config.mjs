@@ -262,13 +262,12 @@ const webpackConfig = {
   devServer: {
     static: {
       directory: projectOutputPath,
-      publicPath: "",
     },
-    watchFiles: [`${projectSrcPath}/**`],
+    watchFiles: [`${projectSrcPath}/**/*.{html,scss,svg}`],
   },
   watchOptions: {
     poll: true,
-    ignored: ["**/node_modules"],
+    ignored: ["**/node_modules/**"],
   },
   stats: {
     errorDetails: true,
